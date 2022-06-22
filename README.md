@@ -40,4 +40,17 @@ stream-start: ## ストリーミングを開始する
 
 
 ## engineファイルについて
-engineファイルである emotionnet.engine は、[emotionnet-on-tao-toolkit](https://github.com/latonaio/emotionnet-on-tao-toolkit)と共通のファイルであり、当該レポジトリで作成した engineファイルを、本リポジトリで使用しています。  
+engineファイルである emotionnet.engine は、[emotionnet-on-tao-toolkit](https://github.com/latonaio/emotionnet-on-tao-toolkit)と共通のファイルであり、当該レポジトリで作成した engineファイルを、本リポジトリで使用しています。 
+
+## 演算について
+本レポジトリでは、ニューラルネットワークのモデルにおいて、エッジコンピューティング環境での演算スループット効率を高めるため、FP16(半精度浮動小数点)を使用しています。  
+浮動小数点値の変更は、Makefileの以下の部分を変更し、engineファイルを生成してください。
+
+```
+tao-convert:
+	docker exec -it emotionnet-tao-toolkit tao-converter -k nvidia_tlt -t fp16 \
+		-p input_landmarks:0,1x1x136x1,32x1x136x1,32x1x136x1 -e /app/src/emotionnet.engine /app/src/model.etlt
+
+```
+
+
